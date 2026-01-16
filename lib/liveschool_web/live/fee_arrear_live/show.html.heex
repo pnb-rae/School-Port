@@ -1,0 +1,30 @@
+<.header>
+  Fee arrear {@fee_arrear.id}
+  <:subtitle>This is a fee_arrear record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/fee_arrears/#{@fee_arrear}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit fee_arrear</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Amount">{@fee_arrear.amount}</:item>
+  <:item title="Academic year">{@fee_arrear.academic_year}</:item>
+  <:item title="Term">{@fee_arrear.term}</:item>
+  <:item title="Notes">{@fee_arrear.notes}</:item>
+  <:item title="Status">{@fee_arrear.status}</:item>
+</.list>
+
+<.back navigate={~p"/fee_arrears"}>Back to fee_arrears</.back>
+
+<.modal :if={@live_action == :edit} id="fee_arrear-modal" show on_cancel={JS.patch(~p"/fee_arrears/#{@fee_arrear}")}>
+  <.live_component
+    module={LiveschoolWeb.FeeArrearLive.FormComponent}
+    id={@fee_arrear.id}
+    title={@page_title}
+    action={@live_action}
+    fee_arrear={@fee_arrear}
+    patch={~p"/fee_arrears/#{@fee_arrear}"}
+  />
+</.modal>

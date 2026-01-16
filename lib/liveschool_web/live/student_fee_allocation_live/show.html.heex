@@ -1,0 +1,32 @@
+<.header>
+  Student fee allocation {@student_fee_allocation.id}
+  <:subtitle>This is a student_fee_allocation record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/student_fee_allocations/#{@student_fee_allocation}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit student_fee_allocation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Amount due">{@student_fee_allocation.amount_due}</:item>
+  <:item title="Amount paid">{@student_fee_allocation.amount_paid}</:item>
+  <:item title="Balance">{@student_fee_allocation.balance}</:item>
+  <:item title="Status">{@student_fee_allocation.status}</:item>
+  <:item title="Due date">{@student_fee_allocation.due_date}</:item>
+  <:item title="Academic year">{@student_fee_allocation.academic_year}</:item>
+  <:item title="Term">{@student_fee_allocation.term}</:item>
+</.list>
+
+<.back navigate={~p"/student_fee_allocations"}>Back to student_fee_allocations</.back>
+
+<.modal :if={@live_action == :edit} id="student_fee_allocation-modal" show on_cancel={JS.patch(~p"/student_fee_allocations/#{@student_fee_allocation}")}>
+  <.live_component
+    module={LiveschoolWeb.StudentFeeAllocationLive.FormComponent}
+    id={@student_fee_allocation.id}
+    title={@page_title}
+    action={@live_action}
+    student_fee_allocation={@student_fee_allocation}
+    patch={~p"/student_fee_allocations/#{@student_fee_allocation}"}
+  />
+</.modal>

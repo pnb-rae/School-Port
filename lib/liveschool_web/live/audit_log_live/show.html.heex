@@ -1,0 +1,31 @@
+<.header>
+  Audit log {@audit_log.id}
+  <:subtitle>This is a audit_log record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/audit_logs/#{@audit_log}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit audit_log</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Action">{@audit_log.action}</:item>
+  <:item title="Table name">{@audit_log.table_name}</:item>
+  <:item title="Record">{@audit_log.record_id}</:item>
+  <:item title="Old values">{@audit_log.old_values}</:item>
+  <:item title="New values">{@audit_log.new_values}</:item>
+  <:item title="Ip address">{@audit_log.ip_address}</:item>
+</.list>
+
+<.back navigate={~p"/audit_logs"}>Back to audit_logs</.back>
+
+<.modal :if={@live_action == :edit} id="audit_log-modal" show on_cancel={JS.patch(~p"/audit_logs/#{@audit_log}")}>
+  <.live_component
+    module={LiveschoolWeb.AuditLogLive.FormComponent}
+    id={@audit_log.id}
+    title={@page_title}
+    action={@live_action}
+    audit_log={@audit_log}
+    patch={~p"/audit_logs/#{@audit_log}"}
+  />
+</.modal>

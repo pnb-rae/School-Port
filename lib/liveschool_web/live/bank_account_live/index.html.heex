@@ -1,0 +1,47 @@
+<.header>
+  Listing Bank accounts
+  <:actions>
+    <.link patch={~p"/bank_accounts/new"}>
+      <.button>New Bank account</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="bank_accounts"
+  rows={@streams.bank_accounts}
+  row_click={fn {_id, bank_account} -> JS.navigate(~p"/bank_accounts/#{bank_account}") end}
+>
+  <:col :let={{_id, bank_account}} label="Name">{bank_account.name}</:col>
+  <:col :let={{_id, bank_account}} label="Branch">{bank_account.branch}</:col>
+  <:col :let={{_id, bank_account}} label="Account number">{bank_account.account_number}</:col>
+  <:col :let={{_id, bank_account}} label="Account name">{bank_account.account_name}</:col>
+  <:col :let={{_id, bank_account}} label="Current balance">{bank_account.current_balance}</:col>
+  <:col :let={{_id, bank_account}} label="Opening balance">{bank_account.opening_balance}</:col>
+  <:col :let={{_id, bank_account}} label="Is active">{bank_account.is_active}</:col>
+  <:action :let={{_id, bank_account}}>
+    <div class="sr-only">
+      <.link navigate={~p"/bank_accounts/#{bank_account}"}>Show</.link>
+    </div>
+    <.link patch={~p"/bank_accounts/#{bank_account}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, bank_account}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: bank_account.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="bank_account-modal" show on_cancel={JS.patch(~p"/bank_accounts")}>
+  <.live_component
+    module={LiveschoolWeb.BankAccountLive.FormComponent}
+    id={@bank_account.id || :new}
+    title={@page_title}
+    action={@live_action}
+    bank_account={@bank_account}
+    patch={~p"/bank_accounts"}
+  />
+</.modal>

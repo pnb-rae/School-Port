@@ -1,0 +1,49 @@
+<.header>
+  Listing School assets
+  <:actions>
+    <.link patch={~p"/school_assets/new"}>
+      <.button>New School asset</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="school_assets"
+  rows={@streams.school_assets}
+  row_click={fn {_id, school_asset} -> JS.navigate(~p"/school_assets/#{school_asset}") end}
+>
+  <:col :let={{_id, school_asset}} label="Name">{school_asset.name}</:col>
+  <:col :let={{_id, school_asset}} label="Asset number">{school_asset.asset_number}</:col>
+  <:col :let={{_id, school_asset}} label="Category">{school_asset.category}</:col>
+  <:col :let={{_id, school_asset}} label="Purchase date">{school_asset.purchase_date}</:col>
+  <:col :let={{_id, school_asset}} label="Purchase price">{school_asset.purchase_price}</:col>
+  <:col :let={{_id, school_asset}} label="Current value">{school_asset.current_value}</:col>
+  <:col :let={{_id, school_asset}} label="Depreciation rate">{school_asset.depreciation_rate}</:col>
+  <:col :let={{_id, school_asset}} label="Location">{school_asset.location}</:col>
+  <:col :let={{_id, school_asset}} label="Condition">{school_asset.condition}</:col>
+  <:action :let={{_id, school_asset}}>
+    <div class="sr-only">
+      <.link navigate={~p"/school_assets/#{school_asset}"}>Show</.link>
+    </div>
+    <.link patch={~p"/school_assets/#{school_asset}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, school_asset}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: school_asset.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="school_asset-modal" show on_cancel={JS.patch(~p"/school_assets")}>
+  <.live_component
+    module={LiveschoolWeb.SchoolAssetLive.FormComponent}
+    id={@school_asset.id || :new}
+    title={@page_title}
+    action={@live_action}
+    school_asset={@school_asset}
+    patch={~p"/school_assets"}
+  />
+</.modal>

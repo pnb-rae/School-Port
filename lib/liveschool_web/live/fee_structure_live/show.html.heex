@@ -1,0 +1,32 @@
+<.header>
+  Fee structure {@fee_structure.id}
+  <:subtitle>This is a fee_structure record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/fee_structures/#{@fee_structure}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit fee_structure</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@fee_structure.name}</:item>
+  <:item title="Amount">{@fee_structure.amount}</:item>
+  <:item title="Fee type">{@fee_structure.fee_type}</:item>
+  <:item title="Payment frequency">{@fee_structure.payment_frequency}</:item>
+  <:item title="Academic year">{@fee_structure.academic_year}</:item>
+  <:item title="Term">{@fee_structure.term}</:item>
+  <:item title="Is mandatory">{@fee_structure.is_mandatory}</:item>
+</.list>
+
+<.back navigate={~p"/fee_structures"}>Back to fee_structures</.back>
+
+<.modal :if={@live_action == :edit} id="fee_structure-modal" show on_cancel={JS.patch(~p"/fee_structures/#{@fee_structure}")}>
+  <.live_component
+    module={LiveschoolWeb.FeeStructureLive.FormComponent}
+    id={@fee_structure.id}
+    title={@page_title}
+    action={@live_action}
+    fee_structure={@fee_structure}
+    patch={~p"/fee_structures/#{@fee_structure}"}
+  />
+</.modal>

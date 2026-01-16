@@ -1,0 +1,32 @@
+<.header>
+  Imprest issue {@imprest_issue.id}
+  <:subtitle>This is a imprest_issue record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/imprest_issues/#{@imprest_issue}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit imprest_issue</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Amount issued">{@imprest_issue.amount_issued}</:item>
+  <:item title="Amount returned">{@imprest_issue.amount_returned}</:item>
+  <:item title="Balance">{@imprest_issue.balance}</:item>
+  <:item title="Issue date">{@imprest_issue.issue_date}</:item>
+  <:item title="Return date">{@imprest_issue.return_date}</:item>
+  <:item title="Purpose">{@imprest_issue.purpose}</:item>
+  <:item title="Status">{@imprest_issue.status}</:item>
+</.list>
+
+<.back navigate={~p"/imprest_issues"}>Back to imprest_issues</.back>
+
+<.modal :if={@live_action == :edit} id="imprest_issue-modal" show on_cancel={JS.patch(~p"/imprest_issues/#{@imprest_issue}")}>
+  <.live_component
+    module={LiveschoolWeb.ImprestIssueLive.FormComponent}
+    id={@imprest_issue.id}
+    title={@page_title}
+    action={@live_action}
+    imprest_issue={@imprest_issue}
+    patch={~p"/imprest_issues/#{@imprest_issue}"}
+  />
+</.modal>

@@ -1,0 +1,47 @@
+<.header>
+  Listing Student fee allocations
+  <:actions>
+    <.link patch={~p"/student_fee_allocations/new"}>
+      <.button>New Student fee allocation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="student_fee_allocations"
+  rows={@streams.student_fee_allocations}
+  row_click={fn {_id, student_fee_allocation} -> JS.navigate(~p"/student_fee_allocations/#{student_fee_allocation}") end}
+>
+  <:col :let={{_id, student_fee_allocation}} label="Amount due">{student_fee_allocation.amount_due}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Amount paid">{student_fee_allocation.amount_paid}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Balance">{student_fee_allocation.balance}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Status">{student_fee_allocation.status}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Due date">{student_fee_allocation.due_date}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Academic year">{student_fee_allocation.academic_year}</:col>
+  <:col :let={{_id, student_fee_allocation}} label="Term">{student_fee_allocation.term}</:col>
+  <:action :let={{_id, student_fee_allocation}}>
+    <div class="sr-only">
+      <.link navigate={~p"/student_fee_allocations/#{student_fee_allocation}"}>Show</.link>
+    </div>
+    <.link patch={~p"/student_fee_allocations/#{student_fee_allocation}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, student_fee_allocation}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: student_fee_allocation.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="student_fee_allocation-modal" show on_cancel={JS.patch(~p"/student_fee_allocations")}>
+  <.live_component
+    module={LiveschoolWeb.StudentFeeAllocationLive.FormComponent}
+    id={@student_fee_allocation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    student_fee_allocation={@student_fee_allocation}
+    patch={~p"/student_fee_allocations"}
+  />
+</.modal>

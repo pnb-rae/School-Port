@@ -1,0 +1,36 @@
+<.header>
+  Staff member {@staff_member.id}
+  <:subtitle>This is a staff_member record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/staff_members/#{@staff_member}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit staff_member</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Staff number">{@staff_member.staff_number}</:item>
+  <:item title="First name">{@staff_member.first_name}</:item>
+  <:item title="Last name">{@staff_member.last_name}</:item>
+  <:item title="Phone">{@staff_member.phone}</:item>
+  <:item title="Email">{@staff_member.email}</:item>
+  <:item title="Date of birth">{@staff_member.date_of_birth}</:item>
+  <:item title="Hire date">{@staff_member.hire_date}</:item>
+  <:item title="Position">{@staff_member.position}</:item>
+  <:item title="Salary">{@staff_member.salary}</:item>
+  <:item title="Account number">{@staff_member.account_number}</:item>
+  <:item title="Status">{@staff_member.status}</:item>
+</.list>
+
+<.back navigate={~p"/staff_members"}>Back to staff_members</.back>
+
+<.modal :if={@live_action == :edit} id="staff_member-modal" show on_cancel={JS.patch(~p"/staff_members/#{@staff_member}")}>
+  <.live_component
+    module={LiveschoolWeb.StaffMemberLive.FormComponent}
+    id={@staff_member.id}
+    title={@page_title}
+    action={@live_action}
+    staff_member={@staff_member}
+    patch={~p"/staff_members/#{@staff_member}"}
+  />
+</.modal>

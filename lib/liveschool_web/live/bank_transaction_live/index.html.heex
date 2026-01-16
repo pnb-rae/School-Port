@@ -1,0 +1,48 @@
+<.header>
+  Listing Bank transactions
+  <:actions>
+    <.link patch={~p"/bank_transactions/new"}>
+      <.button>New Bank transaction</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="bank_transactions"
+  rows={@streams.bank_transactions}
+  row_click={fn {_id, bank_transaction} -> JS.navigate(~p"/bank_transactions/#{bank_transaction}") end}
+>
+  <:col :let={{_id, bank_transaction}} label="Transaction type">{bank_transaction.transaction_type}</:col>
+  <:col :let={{_id, bank_transaction}} label="Amount">{bank_transaction.amount}</:col>
+  <:col :let={{_id, bank_transaction}} label="Transaction date">{bank_transaction.transaction_date}</:col>
+  <:col :let={{_id, bank_transaction}} label="Reference number">{bank_transaction.reference_number}</:col>
+  <:col :let={{_id, bank_transaction}} label="Description">{bank_transaction.description}</:col>
+  <:col :let={{_id, bank_transaction}} label="Related record">{bank_transaction.related_record_id}</:col>
+  <:col :let={{_id, bank_transaction}} label="Related record type">{bank_transaction.related_record_type}</:col>
+  <:col :let={{_id, bank_transaction}} label="Balance after">{bank_transaction.balance_after}</:col>
+  <:action :let={{_id, bank_transaction}}>
+    <div class="sr-only">
+      <.link navigate={~p"/bank_transactions/#{bank_transaction}"}>Show</.link>
+    </div>
+    <.link patch={~p"/bank_transactions/#{bank_transaction}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, bank_transaction}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: bank_transaction.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="bank_transaction-modal" show on_cancel={JS.patch(~p"/bank_transactions")}>
+  <.live_component
+    module={LiveschoolWeb.BankTransactionLive.FormComponent}
+    id={@bank_transaction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    bank_transaction={@bank_transaction}
+    patch={~p"/bank_transactions"}
+  />
+</.modal>

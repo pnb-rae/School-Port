@@ -1,0 +1,32 @@
+<.header>
+  Supplier {@supplier.id}
+  <:subtitle>This is a supplier record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/suppliers/#{@supplier}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit supplier</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@supplier.name}</:item>
+  <:item title="Contact person">{@supplier.contact_person}</:item>
+  <:item title="Phone">{@supplier.phone}</:item>
+  <:item title="Email">{@supplier.email}</:item>
+  <:item title="Address">{@supplier.address}</:item>
+  <:item title="Kra pin">{@supplier.kra_pin}</:item>
+  <:item title="Bank details">{@supplier.bank_details}</:item>
+</.list>
+
+<.back navigate={~p"/suppliers"}>Back to suppliers</.back>
+
+<.modal :if={@live_action == :edit} id="supplier-modal" show on_cancel={JS.patch(~p"/suppliers/#{@supplier}")}>
+  <.live_component
+    module={LiveschoolWeb.SupplierLive.FormComponent}
+    id={@supplier.id}
+    title={@page_title}
+    action={@live_action}
+    supplier={@supplier}
+    patch={~p"/suppliers/#{@supplier}"}
+  />
+</.modal>

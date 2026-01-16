@@ -1,0 +1,32 @@
+<.header>
+  Vote head {@vote_head.id}
+  <:subtitle>This is a vote_head record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/vote_heads/#{@vote_head}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit vote_head</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Code">{@vote_head.code}</:item>
+  <:item title="Name">{@vote_head.name}</:item>
+  <:item title="Description">{@vote_head.description}</:item>
+  <:item title="Budget amount">{@vote_head.budget_amount}</:item>
+  <:item title="Spent amount">{@vote_head.spent_amount}</:item>
+  <:item title="Academic year">{@vote_head.academic_year}</:item>
+  <:item title="Is active">{@vote_head.is_active}</:item>
+</.list>
+
+<.back navigate={~p"/vote_heads"}>Back to vote_heads</.back>
+
+<.modal :if={@live_action == :edit} id="vote_head-modal" show on_cancel={JS.patch(~p"/vote_heads/#{@vote_head}")}>
+  <.live_component
+    module={LiveschoolWeb.VoteHeadLive.FormComponent}
+    id={@vote_head.id}
+    title={@page_title}
+    action={@live_action}
+    vote_head={@vote_head}
+    patch={~p"/vote_heads/#{@vote_head}"}
+  />
+</.modal>

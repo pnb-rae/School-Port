@@ -1,0 +1,33 @@
+<.header>
+  Bank transaction {@bank_transaction.id}
+  <:subtitle>This is a bank_transaction record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/bank_transactions/#{@bank_transaction}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit bank_transaction</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Transaction type">{@bank_transaction.transaction_type}</:item>
+  <:item title="Amount">{@bank_transaction.amount}</:item>
+  <:item title="Transaction date">{@bank_transaction.transaction_date}</:item>
+  <:item title="Reference number">{@bank_transaction.reference_number}</:item>
+  <:item title="Description">{@bank_transaction.description}</:item>
+  <:item title="Related record">{@bank_transaction.related_record_id}</:item>
+  <:item title="Related record type">{@bank_transaction.related_record_type}</:item>
+  <:item title="Balance after">{@bank_transaction.balance_after}</:item>
+</.list>
+
+<.back navigate={~p"/bank_transactions"}>Back to bank_transactions</.back>
+
+<.modal :if={@live_action == :edit} id="bank_transaction-modal" show on_cancel={JS.patch(~p"/bank_transactions/#{@bank_transaction}")}>
+  <.live_component
+    module={LiveschoolWeb.BankTransactionLive.FormComponent}
+    id={@bank_transaction.id}
+    title={@page_title}
+    action={@live_action}
+    bank_transaction={@bank_transaction}
+    patch={~p"/bank_transactions/#{@bank_transaction}"}
+  />
+</.modal>

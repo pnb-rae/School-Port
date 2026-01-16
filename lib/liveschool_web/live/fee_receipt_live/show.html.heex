@@ -1,0 +1,33 @@
+<.header>
+  Fee receipt {@fee_receipt.id}
+  <:subtitle>This is a fee_receipt record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/fee_receipts/#{@fee_receipt}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit fee_receipt</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Receipt number">{@fee_receipt.receipt_number}</:item>
+  <:item title="Amount">{@fee_receipt.amount}</:item>
+  <:item title="Payment method">{@fee_receipt.payment_method}</:item>
+  <:item title="Transaction reference">{@fee_receipt.transaction_reference}</:item>
+  <:item title="Payment date">{@fee_receipt.payment_date}</:item>
+  <:item title="Academic year">{@fee_receipt.academic_year}</:item>
+  <:item title="Term">{@fee_receipt.term}</:item>
+  <:item title="Notes">{@fee_receipt.notes}</:item>
+</.list>
+
+<.back navigate={~p"/fee_receipts"}>Back to fee_receipts</.back>
+
+<.modal :if={@live_action == :edit} id="fee_receipt-modal" show on_cancel={JS.patch(~p"/fee_receipts/#{@fee_receipt}")}>
+  <.live_component
+    module={LiveschoolWeb.FeeReceiptLive.FormComponent}
+    id={@fee_receipt.id}
+    title={@page_title}
+    action={@live_action}
+    fee_receipt={@fee_receipt}
+    patch={~p"/fee_receipts/#{@fee_receipt}"}
+  />
+</.modal>

@@ -1,0 +1,47 @@
+<.header>
+  Listing Imprest issues
+  <:actions>
+    <.link patch={~p"/imprest_issues/new"}>
+      <.button>New Imprest issue</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="imprest_issues"
+  rows={@streams.imprest_issues}
+  row_click={fn {_id, imprest_issue} -> JS.navigate(~p"/imprest_issues/#{imprest_issue}") end}
+>
+  <:col :let={{_id, imprest_issue}} label="Amount issued">{imprest_issue.amount_issued}</:col>
+  <:col :let={{_id, imprest_issue}} label="Amount returned">{imprest_issue.amount_returned}</:col>
+  <:col :let={{_id, imprest_issue}} label="Balance">{imprest_issue.balance}</:col>
+  <:col :let={{_id, imprest_issue}} label="Issue date">{imprest_issue.issue_date}</:col>
+  <:col :let={{_id, imprest_issue}} label="Return date">{imprest_issue.return_date}</:col>
+  <:col :let={{_id, imprest_issue}} label="Purpose">{imprest_issue.purpose}</:col>
+  <:col :let={{_id, imprest_issue}} label="Status">{imprest_issue.status}</:col>
+  <:action :let={{_id, imprest_issue}}>
+    <div class="sr-only">
+      <.link navigate={~p"/imprest_issues/#{imprest_issue}"}>Show</.link>
+    </div>
+    <.link patch={~p"/imprest_issues/#{imprest_issue}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, imprest_issue}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: imprest_issue.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="imprest_issue-modal" show on_cancel={JS.patch(~p"/imprest_issues")}>
+  <.live_component
+    module={LiveschoolWeb.ImprestIssueLive.FormComponent}
+    id={@imprest_issue.id || :new}
+    title={@page_title}
+    action={@live_action}
+    imprest_issue={@imprest_issue}
+    patch={~p"/imprest_issues"}
+  />
+</.modal>

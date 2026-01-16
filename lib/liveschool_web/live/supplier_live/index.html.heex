@@ -1,0 +1,47 @@
+<.header>
+  Listing Suppliers
+  <:actions>
+    <.link patch={~p"/suppliers/new"}>
+      <.button>New Supplier</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="suppliers"
+  rows={@streams.suppliers}
+  row_click={fn {_id, supplier} -> JS.navigate(~p"/suppliers/#{supplier}") end}
+>
+  <:col :let={{_id, supplier}} label="Name">{supplier.name}</:col>
+  <:col :let={{_id, supplier}} label="Contact person">{supplier.contact_person}</:col>
+  <:col :let={{_id, supplier}} label="Phone">{supplier.phone}</:col>
+  <:col :let={{_id, supplier}} label="Email">{supplier.email}</:col>
+  <:col :let={{_id, supplier}} label="Address">{supplier.address}</:col>
+  <:col :let={{_id, supplier}} label="Kra pin">{supplier.kra_pin}</:col>
+  <:col :let={{_id, supplier}} label="Bank details">{supplier.bank_details}</:col>
+  <:action :let={{_id, supplier}}>
+    <div class="sr-only">
+      <.link navigate={~p"/suppliers/#{supplier}"}>Show</.link>
+    </div>
+    <.link patch={~p"/suppliers/#{supplier}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, supplier}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: supplier.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="supplier-modal" show on_cancel={JS.patch(~p"/suppliers")}>
+  <.live_component
+    module={LiveschoolWeb.SupplierLive.FormComponent}
+    id={@supplier.id || :new}
+    title={@page_title}
+    action={@live_action}
+    supplier={@supplier}
+    patch={~p"/suppliers"}
+  />
+</.modal>

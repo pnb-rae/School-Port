@@ -1,0 +1,26 @@
+<.header>
+  Fee receipt item {@fee_receipt_item.id}
+  <:subtitle>This is a fee_receipt_item record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/fee_receipt_items/#{@fee_receipt_item}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit fee_receipt_item</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Amount">{@fee_receipt_item.amount}</:item>
+</.list>
+
+<.back navigate={~p"/fee_receipt_items"}>Back to fee_receipt_items</.back>
+
+<.modal :if={@live_action == :edit} id="fee_receipt_item-modal" show on_cancel={JS.patch(~p"/fee_receipt_items/#{@fee_receipt_item}")}>
+  <.live_component
+    module={LiveschoolWeb.FeeReceiptItemLive.FormComponent}
+    id={@fee_receipt_item.id}
+    title={@page_title}
+    action={@live_action}
+    fee_receipt_item={@fee_receipt_item}
+    patch={~p"/fee_receipt_items/#{@fee_receipt_item}"}
+  />
+</.modal>

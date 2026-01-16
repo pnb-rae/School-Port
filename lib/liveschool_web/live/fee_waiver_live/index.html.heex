@@ -1,0 +1,45 @@
+<.header>
+  Listing Fee waivers
+  <:actions>
+    <.link patch={~p"/fee_waivers/new"}>
+      <.button>New Fee waiver</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="fee_waivers"
+  rows={@streams.fee_waivers}
+  row_click={fn {_id, fee_waiver} -> JS.navigate(~p"/fee_waivers/#{fee_waiver}") end}
+>
+  <:col :let={{_id, fee_waiver}} label="Waiver type">{fee_waiver.waiver_type}</:col>
+  <:col :let={{_id, fee_waiver}} label="Amount or percentage">{fee_waiver.amount_or_percentage}</:col>
+  <:col :let={{_id, fee_waiver}} label="Reason">{fee_waiver.reason}</:col>
+  <:col :let={{_id, fee_waiver}} label="Academic year">{fee_waiver.academic_year}</:col>
+  <:col :let={{_id, fee_waiver}} label="Term">{fee_waiver.term}</:col>
+  <:action :let={{_id, fee_waiver}}>
+    <div class="sr-only">
+      <.link navigate={~p"/fee_waivers/#{fee_waiver}"}>Show</.link>
+    </div>
+    <.link patch={~p"/fee_waivers/#{fee_waiver}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, fee_waiver}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: fee_waiver.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="fee_waiver-modal" show on_cancel={JS.patch(~p"/fee_waivers")}>
+  <.live_component
+    module={LiveschoolWeb.FeeWaiverLive.FormComponent}
+    id={@fee_waiver.id || :new}
+    title={@page_title}
+    action={@live_action}
+    fee_waiver={@fee_waiver}
+    patch={~p"/fee_waivers"}
+  />
+</.modal>

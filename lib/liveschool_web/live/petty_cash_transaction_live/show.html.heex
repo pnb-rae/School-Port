@@ -1,0 +1,30 @@
+<.header>
+  Petty cash transaction {@petty_cash_transaction.id}
+  <:subtitle>This is a petty_cash_transaction record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/petty_cash_transactions/#{@petty_cash_transaction}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit petty_cash_transaction</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Transaction type">{@petty_cash_transaction.transaction_type}</:item>
+  <:item title="Amount">{@petty_cash_transaction.amount}</:item>
+  <:item title="Description">{@petty_cash_transaction.description}</:item>
+  <:item title="Transaction date">{@petty_cash_transaction.transaction_date}</:item>
+  <:item title="Balance after">{@petty_cash_transaction.balance_after}</:item>
+</.list>
+
+<.back navigate={~p"/petty_cash_transactions"}>Back to petty_cash_transactions</.back>
+
+<.modal :if={@live_action == :edit} id="petty_cash_transaction-modal" show on_cancel={JS.patch(~p"/petty_cash_transactions/#{@petty_cash_transaction}")}>
+  <.live_component
+    module={LiveschoolWeb.PettyCashTransactionLive.FormComponent}
+    id={@petty_cash_transaction.id}
+    title={@page_title}
+    action={@live_action}
+    petty_cash_transaction={@petty_cash_transaction}
+    patch={~p"/petty_cash_transactions/#{@petty_cash_transaction}"}
+  />
+</.modal>

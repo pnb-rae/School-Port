@@ -1,0 +1,41 @@
+<.header>
+  Listing Fee receipt items
+  <:actions>
+    <.link patch={~p"/fee_receipt_items/new"}>
+      <.button>New Fee receipt item</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="fee_receipt_items"
+  rows={@streams.fee_receipt_items}
+  row_click={fn {_id, fee_receipt_item} -> JS.navigate(~p"/fee_receipt_items/#{fee_receipt_item}") end}
+>
+  <:col :let={{_id, fee_receipt_item}} label="Amount">{fee_receipt_item.amount}</:col>
+  <:action :let={{_id, fee_receipt_item}}>
+    <div class="sr-only">
+      <.link navigate={~p"/fee_receipt_items/#{fee_receipt_item}"}>Show</.link>
+    </div>
+    <.link patch={~p"/fee_receipt_items/#{fee_receipt_item}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, fee_receipt_item}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: fee_receipt_item.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="fee_receipt_item-modal" show on_cancel={JS.patch(~p"/fee_receipt_items")}>
+  <.live_component
+    module={LiveschoolWeb.FeeReceiptItemLive.FormComponent}
+    id={@fee_receipt_item.id || :new}
+    title={@page_title}
+    action={@live_action}
+    fee_receipt_item={@fee_receipt_item}
+    patch={~p"/fee_receipt_items"}
+  />
+</.modal>

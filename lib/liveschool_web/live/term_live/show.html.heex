@@ -1,0 +1,30 @@
+<.header>
+  Term {@term.id}
+  <:subtitle>This is a term record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/terms/#{@term}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit term</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@term.name}</:item>
+  <:item title="Academic year">{@term.academic_year}</:item>
+  <:item title="Start date">{@term.start_date}</:item>
+  <:item title="End date">{@term.end_date}</:item>
+  <:item title="Is current">{@term.is_current}</:item>
+</.list>
+
+<.back navigate={~p"/terms"}>Back to terms</.back>
+
+<.modal :if={@live_action == :edit} id="term-modal" show on_cancel={JS.patch(~p"/terms/#{@term}")}>
+  <.live_component
+    module={LiveschoolWeb.TermLive.FormComponent}
+    id={@term.id}
+    title={@page_title}
+    action={@live_action}
+    term={@term}
+    patch={~p"/terms/#{@term}"}
+  />
+</.modal>

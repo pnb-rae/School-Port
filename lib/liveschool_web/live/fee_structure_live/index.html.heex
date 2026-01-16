@@ -1,0 +1,47 @@
+<.header>
+  Listing Fee structures
+  <:actions>
+    <.link patch={~p"/fee_structures/new"}>
+      <.button>New Fee structure</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="fee_structures"
+  rows={@streams.fee_structures}
+  row_click={fn {_id, fee_structure} -> JS.navigate(~p"/fee_structures/#{fee_structure}") end}
+>
+  <:col :let={{_id, fee_structure}} label="Name">{fee_structure.name}</:col>
+  <:col :let={{_id, fee_structure}} label="Amount">{fee_structure.amount}</:col>
+  <:col :let={{_id, fee_structure}} label="Fee type">{fee_structure.fee_type}</:col>
+  <:col :let={{_id, fee_structure}} label="Payment frequency">{fee_structure.payment_frequency}</:col>
+  <:col :let={{_id, fee_structure}} label="Academic year">{fee_structure.academic_year}</:col>
+  <:col :let={{_id, fee_structure}} label="Term">{fee_structure.term}</:col>
+  <:col :let={{_id, fee_structure}} label="Is mandatory">{fee_structure.is_mandatory}</:col>
+  <:action :let={{_id, fee_structure}}>
+    <div class="sr-only">
+      <.link navigate={~p"/fee_structures/#{fee_structure}"}>Show</.link>
+    </div>
+    <.link patch={~p"/fee_structures/#{fee_structure}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, fee_structure}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: fee_structure.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="fee_structure-modal" show on_cancel={JS.patch(~p"/fee_structures")}>
+  <.live_component
+    module={LiveschoolWeb.FeeStructureLive.FormComponent}
+    id={@fee_structure.id || :new}
+    title={@page_title}
+    action={@live_action}
+    fee_structure={@fee_structure}
+    patch={~p"/fee_structures"}
+  />
+</.modal>

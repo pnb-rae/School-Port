@@ -1,0 +1,45 @@
+<.header>
+  Listing Fee arrears
+  <:actions>
+    <.link patch={~p"/fee_arrears/new"}>
+      <.button>New Fee arrear</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="fee_arrears"
+  rows={@streams.fee_arrears}
+  row_click={fn {_id, fee_arrear} -> JS.navigate(~p"/fee_arrears/#{fee_arrear}") end}
+>
+  <:col :let={{_id, fee_arrear}} label="Amount">{fee_arrear.amount}</:col>
+  <:col :let={{_id, fee_arrear}} label="Academic year">{fee_arrear.academic_year}</:col>
+  <:col :let={{_id, fee_arrear}} label="Term">{fee_arrear.term}</:col>
+  <:col :let={{_id, fee_arrear}} label="Notes">{fee_arrear.notes}</:col>
+  <:col :let={{_id, fee_arrear}} label="Status">{fee_arrear.status}</:col>
+  <:action :let={{_id, fee_arrear}}>
+    <div class="sr-only">
+      <.link navigate={~p"/fee_arrears/#{fee_arrear}"}>Show</.link>
+    </div>
+    <.link patch={~p"/fee_arrears/#{fee_arrear}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, fee_arrear}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: fee_arrear.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="fee_arrear-modal" show on_cancel={JS.patch(~p"/fee_arrears")}>
+  <.live_component
+    module={LiveschoolWeb.FeeArrearLive.FormComponent}
+    id={@fee_arrear.id || :new}
+    title={@page_title}
+    action={@live_action}
+    fee_arrear={@fee_arrear}
+    patch={~p"/fee_arrears"}
+  />
+</.modal>

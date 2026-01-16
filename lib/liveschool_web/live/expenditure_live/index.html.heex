@@ -1,0 +1,48 @@
+<.header>
+  Listing Expenditures
+  <:actions>
+    <.link patch={~p"/expenditures/new"}>
+      <.button>New Expenditure</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="expenditures"
+  rows={@streams.expenditures}
+  row_click={fn {_id, expenditure} -> JS.navigate(~p"/expenditures/#{expenditure}") end}
+>
+  <:col :let={{_id, expenditure}} label="Payment number">{expenditure.payment_number}</:col>
+  <:col :let={{_id, expenditure}} label="Payee type">{expenditure.payee_type}</:col>
+  <:col :let={{_id, expenditure}} label="Payee">{expenditure.payee_id}</:col>
+  <:col :let={{_id, expenditure}} label="Amount">{expenditure.amount}</:col>
+  <:col :let={{_id, expenditure}} label="Payment method">{expenditure.payment_method}</:col>
+  <:col :let={{_id, expenditure}} label="Description">{expenditure.description}</:col>
+  <:col :let={{_id, expenditure}} label="Payment date">{expenditure.payment_date}</:col>
+  <:col :let={{_id, expenditure}} label="Status">{expenditure.status}</:col>
+  <:action :let={{_id, expenditure}}>
+    <div class="sr-only">
+      <.link navigate={~p"/expenditures/#{expenditure}"}>Show</.link>
+    </div>
+    <.link patch={~p"/expenditures/#{expenditure}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, expenditure}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: expenditure.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="expenditure-modal" show on_cancel={JS.patch(~p"/expenditures")}>
+  <.live_component
+    module={LiveschoolWeb.ExpenditureLive.FormComponent}
+    id={@expenditure.id || :new}
+    title={@page_title}
+    action={@live_action}
+    expenditure={@expenditure}
+    patch={~p"/expenditures"}
+  />
+</.modal>

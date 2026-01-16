@@ -1,0 +1,51 @@
+<.header>
+  Listing Staff members
+  <:actions>
+    <.link patch={~p"/staff_members/new"}>
+      <.button>New Staff member</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="staff_members"
+  rows={@streams.staff_members}
+  row_click={fn {_id, staff_member} -> JS.navigate(~p"/staff_members/#{staff_member}") end}
+>
+  <:col :let={{_id, staff_member}} label="Staff number">{staff_member.staff_number}</:col>
+  <:col :let={{_id, staff_member}} label="First name">{staff_member.first_name}</:col>
+  <:col :let={{_id, staff_member}} label="Last name">{staff_member.last_name}</:col>
+  <:col :let={{_id, staff_member}} label="Phone">{staff_member.phone}</:col>
+  <:col :let={{_id, staff_member}} label="Email">{staff_member.email}</:col>
+  <:col :let={{_id, staff_member}} label="Date of birth">{staff_member.date_of_birth}</:col>
+  <:col :let={{_id, staff_member}} label="Hire date">{staff_member.hire_date}</:col>
+  <:col :let={{_id, staff_member}} label="Position">{staff_member.position}</:col>
+  <:col :let={{_id, staff_member}} label="Salary">{staff_member.salary}</:col>
+  <:col :let={{_id, staff_member}} label="Account number">{staff_member.account_number}</:col>
+  <:col :let={{_id, staff_member}} label="Status">{staff_member.status}</:col>
+  <:action :let={{_id, staff_member}}>
+    <div class="sr-only">
+      <.link navigate={~p"/staff_members/#{staff_member}"}>Show</.link>
+    </div>
+    <.link patch={~p"/staff_members/#{staff_member}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, staff_member}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: staff_member.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="staff_member-modal" show on_cancel={JS.patch(~p"/staff_members")}>
+  <.live_component
+    module={LiveschoolWeb.StaffMemberLive.FormComponent}
+    id={@staff_member.id || :new}
+    title={@page_title}
+    action={@live_action}
+    staff_member={@staff_member}
+    patch={~p"/staff_members"}
+  />
+</.modal>

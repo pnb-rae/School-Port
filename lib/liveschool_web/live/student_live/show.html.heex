@@ -1,0 +1,38 @@
+<.header>
+  Student {@student.id}
+  <:subtitle>This is a student record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/students/#{@student}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit student</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Admission number">{@student.admission_number}</:item>
+  <:item title="First name">{@student.first_name}</:item>
+  <:item title="Middle name">{@student.middle_name}</:item>
+  <:item title="Last name">{@student.last_name}</:item>
+  <:item title="Date of birth">{@student.date_of_birth}</:item>
+  <:item title="Gender">{@student.gender}</:item>
+  <:item title="Photo url">{@student.photo_url}</:item>
+  <:item title="Address">{@student.address}</:item>
+  <:item title="Parent guardian name">{@student.parent_guardian_name}</:item>
+  <:item title="Parent guardian phone">{@student.parent_guardian_phone}</:item>
+  <:item title="Parent guardian email">{@student.parent_guardian_email}</:item>
+  <:item title="Admission date">{@student.admission_date}</:item>
+  <:item title="Status">{@student.status}</:item>
+</.list>
+
+<.back navigate={~p"/students"}>Back to students</.back>
+
+<.modal :if={@live_action == :edit} id="student-modal" show on_cancel={JS.patch(~p"/students/#{@student}")}>
+  <.live_component
+    module={LiveschoolWeb.StudentLive.FormComponent}
+    id={@student.id}
+    title={@page_title}
+    action={@live_action}
+    student={@student}
+    patch={~p"/students/#{@student}"}
+  />
+</.modal>

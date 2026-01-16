@@ -1,0 +1,46 @@
+<.header>
+  Listing Audit logs
+  <:actions>
+    <.link patch={~p"/audit_logs/new"}>
+      <.button>New Audit log</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="audit_logs"
+  rows={@streams.audit_logs}
+  row_click={fn {_id, audit_log} -> JS.navigate(~p"/audit_logs/#{audit_log}") end}
+>
+  <:col :let={{_id, audit_log}} label="Action">{audit_log.action}</:col>
+  <:col :let={{_id, audit_log}} label="Table name">{audit_log.table_name}</:col>
+  <:col :let={{_id, audit_log}} label="Record">{audit_log.record_id}</:col>
+  <:col :let={{_id, audit_log}} label="Old values">{audit_log.old_values}</:col>
+  <:col :let={{_id, audit_log}} label="New values">{audit_log.new_values}</:col>
+  <:col :let={{_id, audit_log}} label="Ip address">{audit_log.ip_address}</:col>
+  <:action :let={{_id, audit_log}}>
+    <div class="sr-only">
+      <.link navigate={~p"/audit_logs/#{audit_log}"}>Show</.link>
+    </div>
+    <.link patch={~p"/audit_logs/#{audit_log}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, audit_log}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: audit_log.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="audit_log-modal" show on_cancel={JS.patch(~p"/audit_logs")}>
+  <.live_component
+    module={LiveschoolWeb.AuditLogLive.FormComponent}
+    id={@audit_log.id || :new}
+    title={@page_title}
+    action={@live_action}
+    audit_log={@audit_log}
+    patch={~p"/audit_logs"}
+  />
+</.modal>

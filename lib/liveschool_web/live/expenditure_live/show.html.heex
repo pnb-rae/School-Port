@@ -1,0 +1,33 @@
+<.header>
+  Expenditure {@expenditure.id}
+  <:subtitle>This is a expenditure record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/expenditures/#{@expenditure}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit expenditure</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Payment number">{@expenditure.payment_number}</:item>
+  <:item title="Payee type">{@expenditure.payee_type}</:item>
+  <:item title="Payee">{@expenditure.payee_id}</:item>
+  <:item title="Amount">{@expenditure.amount}</:item>
+  <:item title="Payment method">{@expenditure.payment_method}</:item>
+  <:item title="Description">{@expenditure.description}</:item>
+  <:item title="Payment date">{@expenditure.payment_date}</:item>
+  <:item title="Status">{@expenditure.status}</:item>
+</.list>
+
+<.back navigate={~p"/expenditures"}>Back to expenditures</.back>
+
+<.modal :if={@live_action == :edit} id="expenditure-modal" show on_cancel={JS.patch(~p"/expenditures/#{@expenditure}")}>
+  <.live_component
+    module={LiveschoolWeb.ExpenditureLive.FormComponent}
+    id={@expenditure.id}
+    title={@page_title}
+    action={@live_action}
+    expenditure={@expenditure}
+    patch={~p"/expenditures/#{@expenditure}"}
+  />
+</.modal>

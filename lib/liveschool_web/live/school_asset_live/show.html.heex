@@ -1,0 +1,34 @@
+<.header>
+  School asset {@school_asset.id}
+  <:subtitle>This is a school_asset record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/school_assets/#{@school_asset}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit school_asset</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@school_asset.name}</:item>
+  <:item title="Asset number">{@school_asset.asset_number}</:item>
+  <:item title="Category">{@school_asset.category}</:item>
+  <:item title="Purchase date">{@school_asset.purchase_date}</:item>
+  <:item title="Purchase price">{@school_asset.purchase_price}</:item>
+  <:item title="Current value">{@school_asset.current_value}</:item>
+  <:item title="Depreciation rate">{@school_asset.depreciation_rate}</:item>
+  <:item title="Location">{@school_asset.location}</:item>
+  <:item title="Condition">{@school_asset.condition}</:item>
+</.list>
+
+<.back navigate={~p"/school_assets"}>Back to school_assets</.back>
+
+<.modal :if={@live_action == :edit} id="school_asset-modal" show on_cancel={JS.patch(~p"/school_assets/#{@school_asset}")}>
+  <.live_component
+    module={LiveschoolWeb.SchoolAssetLive.FormComponent}
+    id={@school_asset.id}
+    title={@page_title}
+    action={@live_action}
+    school_asset={@school_asset}
+    patch={~p"/school_assets/#{@school_asset}"}
+  />
+</.modal>

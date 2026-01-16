@@ -1,0 +1,32 @@
+<.header>
+  Bank account {@bank_account.id}
+  <:subtitle>This is a bank_account record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/bank_accounts/#{@bank_account}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit bank_account</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name">{@bank_account.name}</:item>
+  <:item title="Branch">{@bank_account.branch}</:item>
+  <:item title="Account number">{@bank_account.account_number}</:item>
+  <:item title="Account name">{@bank_account.account_name}</:item>
+  <:item title="Current balance">{@bank_account.current_balance}</:item>
+  <:item title="Opening balance">{@bank_account.opening_balance}</:item>
+  <:item title="Is active">{@bank_account.is_active}</:item>
+</.list>
+
+<.back navigate={~p"/bank_accounts"}>Back to bank_accounts</.back>
+
+<.modal :if={@live_action == :edit} id="bank_account-modal" show on_cancel={JS.patch(~p"/bank_accounts/#{@bank_account}")}>
+  <.live_component
+    module={LiveschoolWeb.BankAccountLive.FormComponent}
+    id={@bank_account.id}
+    title={@page_title}
+    action={@live_action}
+    bank_account={@bank_account}
+    patch={~p"/bank_accounts/#{@bank_account}"}
+  />
+</.modal>

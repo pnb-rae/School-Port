@@ -1,0 +1,45 @@
+<.header>
+  Listing Terms
+  <:actions>
+    <.link patch={~p"/terms/new"}>
+      <.button>New Term</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="terms"
+  rows={@streams.terms}
+  row_click={fn {_id, term} -> JS.navigate(~p"/terms/#{term}") end}
+>
+  <:col :let={{_id, term}} label="Name">{term.name}</:col>
+  <:col :let={{_id, term}} label="Academic year">{term.academic_year}</:col>
+  <:col :let={{_id, term}} label="Start date">{term.start_date}</:col>
+  <:col :let={{_id, term}} label="End date">{term.end_date}</:col>
+  <:col :let={{_id, term}} label="Is current">{term.is_current}</:col>
+  <:action :let={{_id, term}}>
+    <div class="sr-only">
+      <.link navigate={~p"/terms/#{term}"}>Show</.link>
+    </div>
+    <.link patch={~p"/terms/#{term}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, term}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: term.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="term-modal" show on_cancel={JS.patch(~p"/terms")}>
+  <.live_component
+    module={LiveschoolWeb.TermLive.FormComponent}
+    id={@term.id || :new}
+    title={@page_title}
+    action={@live_action}
+    term={@term}
+    patch={~p"/terms"}
+  />
+</.modal>

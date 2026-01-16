@@ -1,0 +1,53 @@
+<.header>
+  Listing Students
+  <:actions>
+    <.link patch={~p"/students/new"}>
+      <.button>New Student</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="students"
+  rows={@streams.students}
+  row_click={fn {_id, student} -> JS.navigate(~p"/students/#{student}") end}
+>
+  <:col :let={{_id, student}} label="Admission number">{student.admission_number}</:col>
+  <:col :let={{_id, student}} label="First name">{student.first_name}</:col>
+  <:col :let={{_id, student}} label="Middle name">{student.middle_name}</:col>
+  <:col :let={{_id, student}} label="Last name">{student.last_name}</:col>
+  <:col :let={{_id, student}} label="Date of birth">{student.date_of_birth}</:col>
+  <:col :let={{_id, student}} label="Gender">{student.gender}</:col>
+  <:col :let={{_id, student}} label="Photo url">{student.photo_url}</:col>
+  <:col :let={{_id, student}} label="Address">{student.address}</:col>
+  <:col :let={{_id, student}} label="Parent guardian name">{student.parent_guardian_name}</:col>
+  <:col :let={{_id, student}} label="Parent guardian phone">{student.parent_guardian_phone}</:col>
+  <:col :let={{_id, student}} label="Parent guardian email">{student.parent_guardian_email}</:col>
+  <:col :let={{_id, student}} label="Admission date">{student.admission_date}</:col>
+  <:col :let={{_id, student}} label="Status">{student.status}</:col>
+  <:action :let={{_id, student}}>
+    <div class="sr-only">
+      <.link navigate={~p"/students/#{student}"}>Show</.link>
+    </div>
+    <.link patch={~p"/students/#{student}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, student}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: student.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="student-modal" show on_cancel={JS.patch(~p"/students")}>
+  <.live_component
+    module={LiveschoolWeb.StudentLive.FormComponent}
+    id={@student.id || :new}
+    title={@page_title}
+    action={@live_action}
+    student={@student}
+    patch={~p"/students"}
+  />
+</.modal>

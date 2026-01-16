@@ -1,0 +1,47 @@
+<.header>
+  Listing Vote heads
+  <:actions>
+    <.link patch={~p"/vote_heads/new"}>
+      <.button>New Vote head</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="vote_heads"
+  rows={@streams.vote_heads}
+  row_click={fn {_id, vote_head} -> JS.navigate(~p"/vote_heads/#{vote_head}") end}
+>
+  <:col :let={{_id, vote_head}} label="Code">{vote_head.code}</:col>
+  <:col :let={{_id, vote_head}} label="Name">{vote_head.name}</:col>
+  <:col :let={{_id, vote_head}} label="Description">{vote_head.description}</:col>
+  <:col :let={{_id, vote_head}} label="Budget amount">{vote_head.budget_amount}</:col>
+  <:col :let={{_id, vote_head}} label="Spent amount">{vote_head.spent_amount}</:col>
+  <:col :let={{_id, vote_head}} label="Academic year">{vote_head.academic_year}</:col>
+  <:col :let={{_id, vote_head}} label="Is active">{vote_head.is_active}</:col>
+  <:action :let={{_id, vote_head}}>
+    <div class="sr-only">
+      <.link navigate={~p"/vote_heads/#{vote_head}"}>Show</.link>
+    </div>
+    <.link patch={~p"/vote_heads/#{vote_head}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, vote_head}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: vote_head.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="vote_head-modal" show on_cancel={JS.patch(~p"/vote_heads")}>
+  <.live_component
+    module={LiveschoolWeb.VoteHeadLive.FormComponent}
+    id={@vote_head.id || :new}
+    title={@page_title}
+    action={@live_action}
+    vote_head={@vote_head}
+    patch={~p"/vote_heads"}
+  />
+</.modal>

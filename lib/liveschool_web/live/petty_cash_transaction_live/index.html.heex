@@ -1,0 +1,45 @@
+<.header>
+  Listing Petty cash transactions
+  <:actions>
+    <.link patch={~p"/petty_cash_transactions/new"}>
+      <.button>New Petty cash transaction</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="petty_cash_transactions"
+  rows={@streams.petty_cash_transactions}
+  row_click={fn {_id, petty_cash_transaction} -> JS.navigate(~p"/petty_cash_transactions/#{petty_cash_transaction}") end}
+>
+  <:col :let={{_id, petty_cash_transaction}} label="Transaction type">{petty_cash_transaction.transaction_type}</:col>
+  <:col :let={{_id, petty_cash_transaction}} label="Amount">{petty_cash_transaction.amount}</:col>
+  <:col :let={{_id, petty_cash_transaction}} label="Description">{petty_cash_transaction.description}</:col>
+  <:col :let={{_id, petty_cash_transaction}} label="Transaction date">{petty_cash_transaction.transaction_date}</:col>
+  <:col :let={{_id, petty_cash_transaction}} label="Balance after">{petty_cash_transaction.balance_after}</:col>
+  <:action :let={{_id, petty_cash_transaction}}>
+    <div class="sr-only">
+      <.link navigate={~p"/petty_cash_transactions/#{petty_cash_transaction}"}>Show</.link>
+    </div>
+    <.link patch={~p"/petty_cash_transactions/#{petty_cash_transaction}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, petty_cash_transaction}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: petty_cash_transaction.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="petty_cash_transaction-modal" show on_cancel={JS.patch(~p"/petty_cash_transactions")}>
+  <.live_component
+    module={LiveschoolWeb.PettyCashTransactionLive.FormComponent}
+    id={@petty_cash_transaction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    petty_cash_transaction={@petty_cash_transaction}
+    patch={~p"/petty_cash_transactions"}
+  />
+</.modal>
