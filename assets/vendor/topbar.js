@@ -163,7 +163,3 @@
     this.topbar = topbar;
   }
 }.call(this, window, document));
-
-
-shjshgkalifugrjkGURUWERYGFGlwefglfeyglEFGYYUGNFeunKLEFYGGFGYEFLWIEFWWIWFE uygaflgfgfye
-dusgyfadkkkkkkkkkkkkkkkk aeyghhgalghiehggeihhgvnjvfgrjgv
